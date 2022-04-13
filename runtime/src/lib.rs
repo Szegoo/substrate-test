@@ -43,6 +43,7 @@ pub use sp_runtime::{Perbill, Permill};
 /// Import the template pallet.
 pub use pallet_template;
 
+
 /// An index to a block.
 pub type BlockNumber = u32;
 
@@ -250,6 +251,22 @@ impl pallet_balances::Config for Runtime {
 }
 
 parameter_types! {
+	pub const NickResrvervationFee: u128 = 100;
+	pub const MinNickLength: u32 = 3;
+	pub const MaxNickLength: u32 = 32;
+}
+
+impl pallet_nicks::Config for Runtime {
+	type Currency = Balances;
+	type ReservationFee = NickResrvervationFee;
+	type Slashed = ();
+	type ForceOrigin = frame_system::EnsureRoot<AccountId>;
+	type MinLength = MinNickLength;
+	type MaxLength = MaxNickLength;
+	type Event = Event;
+}
+
+parameter_types! {
 	pub const TransactionByteFee: Balance = 1;
 }
 
@@ -269,6 +286,24 @@ impl pallet_sudo::Config for Runtime {
 /// Configure the pallet-template in pallets/template.
 impl pallet_template::Config for Runtime {
 	type Event = Event;
+	type MaxBytesInHash = frame_support::traits::ConstU32<32>;
+}
+
+impl pallet_assets::Config for Runtime {
+	type Event = Event;
+	type Balance = u32;
+	type AssetId = u64;
+	type Currency = Balances;
+	type ForceOrigin = frame_system::EnsureRoot<AccountId>;
+	type AssetDeposit = frame_support::traits::ConstU128<10>;
+	type AssetAccountDeposit = frame_support::traits::ConstU128<50>;
+	type MetadataDepositBase = frame_support::traits::ConstU128<100>;
+	type MetadataDepositPerByte = frame_support::traits::ConstU128<5>;
+	type ApprovalDeposit = frame_support::traits::ConstU128<50>;
+	type StringLimit = frame_support::traits::ConstU32<20>;
+	type Freezer = ();
+	type WeightInfo = ();
+	type Extra = ();
 }
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
@@ -288,6 +323,8 @@ construct_runtime!(
 		Sudo: pallet_sudo,
 		// Include the custom logic from the pallet-template in the runtime.
 		TemplateModule: pallet_template,
+		Nicks: pallet_nicks,
+		Assets: pallet_assets,
 	}
 );
 
