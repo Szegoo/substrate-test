@@ -42,7 +42,7 @@ pub use sp_runtime::{Perbill, Permill};
 
 /// Import the template pallet.
 pub use pallet_template;
-
+pub use pallet_nfassets;
 
 /// An index to a block.
 pub type BlockNumber = u32;
@@ -306,6 +306,12 @@ impl pallet_assets::Config for Runtime {
 	type Extra = ();
 }
 
+impl pallet_nfassets::Config for Runtime {
+	type Event = Event;
+	type AssetId = u32;
+	type MaxName = frame_support::traits::ConstU32<12>;
+}
+
 // Create the runtime by composing the FRAME pallets that were previously configured.
 construct_runtime!(
 	pub enum Runtime where
@@ -325,6 +331,7 @@ construct_runtime!(
 		TemplateModule: pallet_template,
 		Nicks: pallet_nicks,
 		Assets: pallet_assets,
+		NfAssets: pallet_nfassets,
 	}
 );
 

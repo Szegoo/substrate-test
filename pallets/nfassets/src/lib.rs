@@ -45,7 +45,8 @@ pub mod pallet {
 
 	#[pallet::error]
 	pub enum Error<T> {
-		InUse
+		InUse,
+		Unauthorized
 	}
 
 	#[pallet::call]		
@@ -60,5 +61,21 @@ pub mod pallet {
 			Self::deposit_event(Event::<T>::NftMinted(id, sender));
 			Ok(())
 		}
+
+		#[pallet::weight(500)]
+		pub fn transfer(origin: OriginFor<T>, id: T::AssetId, benefiary: T::AccountId)
+		-> DispatchResult {
+			let sender = ensure_signed(origin)?;
+			let (owner, name) = Assets::<T>::get(&id)
+				.expect("Every asset must have an owner and a name!");
+			ensure!(owner == sender, Error::<T>::Unauthorized);
+
+			Assets::<T>::remove(&id);
+			Assets::<T>::insert(&id, (&benefiary, name));
+
+			Self::deposit_event(Event::NftTransferred(id, owner, benefiary));
+
+			Ok(())
+		} 
 	}
 }
