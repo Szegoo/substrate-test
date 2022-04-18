@@ -312,6 +312,13 @@ impl pallet_nfassets::Config for Runtime {
 	type MaxName = frame_support::traits::ConstU32<12>;
 }
 
+impl pallet_contracts::Config for Runtime {
+	type Event = Event;
+	type Time = Timestamp;
+	type Randomness = RandomnessCollectiveFlip;
+	type Currency = Balances;
+}
+
 // Create the runtime by composing the FRAME pallets that were previously configured.
 construct_runtime!(
 	pub enum Runtime where
@@ -332,6 +339,7 @@ construct_runtime!(
 		Nicks: pallet_nicks,
 		Assets: pallet_assets,
 		NfAssets: pallet_nfassets,
+		Contracts: pallet_contracts,
 	}
 );
 

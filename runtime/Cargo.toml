@@ -42,6 +42,8 @@ sp-version = { version = "5.0.0", default-features = false, git = "https://githu
 #added by me
 pallet-nicks = { default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.18" } 
 pallet-assets = { default-features = false, git = "https://github.com/paritytech/substrate", branch = "polkadot-v0.9.18"}
+pallet-contracts = { default-features = false, git = "https://github.com/paritytech/substrate", branch = "polkadot-v0.9.18", optional=true}
+pallet-contracts-primitives = {default-features = false, git = "https://github.com/paritytech/substrate", branch="polkadot-v0.9.18", optional=true}
 
 # Used for the node template's RPCs
 frame-system-rpc-runtime-api = { version = "4.0.0-dev", default-features = false, git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.18" }
@@ -92,7 +94,9 @@ std = [
 	"pallet-assets/std",
 	"pallet-balances/std",
     "pallet-nicks/std",
-	"pallet-nfassets/std"
+	"pallet-nfassets/std",
+	"pallet-contracts",
+	"pallet-contracts-primitives"	
 ]
 runtime-benchmarks = [
 	"frame-benchmarking/runtime-benchmarks",
